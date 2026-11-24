@@ -110,6 +110,21 @@ sudo systemctl restart wazuh-manager
 - **ubuntu-endpoint:** static `.101`, agent deployed from the dashboard (Linux, DEB, aarch64), showing Active
 - **win11-endpoint:** Windows 11 Pro ARM, static `.102`, agent deployed (Windows MSI), showing Active
 
+### Backups
+
+Each VM has a clean clone, made right after it was working:
+
+| VM | Backup |
+|---|---|
+| `Wazuh` | `wazuh-clean` |
+| `ubuntu-endpoint` | `ubuntu-endpoint-clean` |
+| `win11-endpoint` | `win11-endpoint-clean` |
+
+- **Never run a clone at the same time as its original.** A clone is an exact copy with the same static IP and, for the endpoints, the same Wazuh agent ID and key. Running both causes IP conflicts, and Wazuh sees two machines claiming to be the same agent.
+- **Day to day:** run only `Wazuh`, `ubuntu-endpoint` and `win11-endpoint`.
+- **If one breaks:** delete the broken VM, clone its `-clean` copy, and give the new copy the original name. Leave the `-clean` VM untouched so there's always a backup.
+- **Shut down cleanly before cloning** (`sudo poweroff` on Linux, Shut down on Windows). Start the Wazuh server first, wait 2 to 3 minutes, then the endpoints.
+
 ### For next time
 
 - Use Ubuntu 24.04 LTS, the standard install, and give root the full disk during install
