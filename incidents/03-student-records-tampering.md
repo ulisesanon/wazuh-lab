@@ -30,7 +30,16 @@ Wazuh's built-in FIM report for the last 24 hours (`manager.name: ubuntuserver A
 What I checked to confirm the alerts were real and not noise:
 
 - **Scope.** All three alerts are on one host and in one folder. No other agent had FIM activity in the same window.
-- **The change itself.** The rule 550 event includes a diff (`syscheck.diff`) because the folder is monitored with `report_changes`. It shows the line `Grade: A` replaced by `Grade: F`.
+- **The change itself.** The rule 550 event includes a diff (`syscheck.diff`) because the folder is monitored with `report_changes`:
+
+  ```diff
+  1c1
+  < Studnet: Test Person, ID 000001, Grade: A
+  ---
+  > Student: Test Person, ID 000001, Grade: F
+  ```
+
+  Line 1 was rewritten (`1c1`). The `<` line is the old content and the `>` line is the new. The grade went from A to F. The label also changed from "Studnet" to "Student," because the original file had a typo and the whole line was replaced. That's a useful detail in itself: the diff records every character that changed, not just the part an attacker cared about.
 - **Ownership.** The FIM dashboard lists `root` as the user for all three events. That's the file owner after the change (`uname_after`), not proof of who made the change.
 - **Timing.** Three events in under 75 seconds, in a folder that normally doesn't change, is not routine activity.
 
@@ -79,7 +88,7 @@ Wazuh's default rules 550, 553 and 554 don't carry MITRE tags, so I mapped these
 
   ![FIM events table with rules 553, 554 and 550](evidence/03-student-records/fim-events.png)
 
-- Diff of `grades.csv` (A to F): *screenshot to be added*
+- Diff of `grades.csv` (A to F): text from `syscheck.diff` is quoted under Triage
 
 ## How the attack was simulated
 
