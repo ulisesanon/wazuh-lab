@@ -1,0 +1,1 @@
+I built a Wazuh SIEM lab at home with a Linux and a Windows endpoint. The install didn't go smoothly. The first attempts failed on disk space and leftover packages, and after a reboot the manager's API wouldn't start because of stale PID files. Working through those taught me more about how Wazuh runs than the install guide did.
