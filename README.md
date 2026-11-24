@@ -22,7 +22,8 @@ Inside look at Wazuh Dashboard
 
 <img width="3838" height="2102" alt="image" src="https://github.com/user-attachments/assets/0f78fad6-eda5-4d3e-b68c-82d0f77a16ee" />
 
-<hx> Setup & Issues </hx>
+
+<hx>Setup & Issues</hx>
 
 **Wazuh lab build notes, Nov 23, 2026**
 
