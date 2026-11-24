@@ -1,4 +1,4 @@
-# Incident 03: Tampering with student records on ubuntu-endpoint
+# Incident 01: Student grade altered and file dropped on ubuntu-endpoint
 
 | | |
 |---|---|
@@ -79,14 +79,14 @@ Wazuh's default rules 550, 553 and 554 don't carry MITRE tags, so I mapped these
 
 ## Evidence
 
-- Wazuh FIM report (PDF): [wazuh-fim-report.pdf](evidence/03-student-records/wazuh-fim-report.pdf)
+- Wazuh FIM report (PDF): [wazuh-fim-report.pdf](evidence/01-student-grade-altered/wazuh-fim-report.pdf)
 - FIM dashboard: all three actions on ubuntu-endpoint
 
-  ![FIM dashboard showing added, deleted and modified alerts on ubuntu-endpoint](evidence/03-student-records/fim-dashboard.png)
+  ![FIM dashboard showing added, deleted and modified alerts on ubuntu-endpoint](evidence/01-student-grade-altered/fim-dashboard.png)
 
 - FIM events table: timestamps, paths, rule IDs and levels
 
-  ![FIM events table with rules 553, 554 and 550](evidence/03-student-records/fim-events.png)
+  ![FIM events table with rules 553, 554 and 550](evidence/01-student-grade-altered/fim-events.png)
 
 - Diff of `grades.csv` (A to F): text from `syscheck.diff` is quoted under Triage
 

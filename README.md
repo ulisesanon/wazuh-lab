@@ -22,9 +22,9 @@ Everything runs on a MacBook Pro (Apple Silicon) in UTM virtual machines on an i
 - [x] Ubuntu endpoint reporting
 - [x] Windows 11 endpoint reporting
 - [ ] Kali attacker VM
-- [ ] Attack 1: SSH brute force
-- [ ] Attack 2: Backdoor admin account
-- [x] [Attack 3: Tampering with fake student records](incidents/03-student-records-tampering.md)
+- [ ] Attack: SSH brute force
+- [ ] Attack: Backdoor admin account
+- [x] Attack: Tampering with fake student records ([Incident 01](incidents/01-student-grade-altered.md))
 - [ ] Incident reports mapped to MITRE ATT&CK
 
 ## Wazuh dashboard
