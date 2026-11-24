@@ -20,4 +20,4 @@ Status: server and both endpoints are deployed and reporting. Next up is a Kali 
 
 Inside look at Wazuh Dashboard
 
-	<img width="3838" height="2102" alt="image" src="https://github.com/user-attachments/assets/0f78fad6-eda5-4d3e-b68c-82d0f77a16ee" />
+<img width="3838" height="2102" alt="image" src="https://github.com/user-attachments/assets/0f78fad6-eda5-4d3e-b68c-82d0f77a16ee" />
