@@ -51,7 +51,8 @@ Build notes from November 23, 2026.
 
 - Guide said `50-cloud-init.yaml`, my VM had `00-installer-config.yaml`
 - **Fix:** check `ls /etc/netplan` and edit whatever's there
-- Opening `nano` on the wrong name created a second, empty `50-cloud-init.yaml`. Netplan reads every file and the higher number wins, so it overrode my config. Deleted it.
+- Opening `nano` on the guide's file name created a new, empty `50-cloud-init.yaml` in `/etc/netplan`. Netplan reads every file there and the higher number wins, so the empty file overrode my config. I also ran `nano` from my home folder once, which made an empty `00-installer-config.yaml` there instead of editing the real one.
+- **Fix:** always use the full path, `/etc/netplan/...`, and check with `ls /etc/netplan` before editing.
 
 ### Problem 3: `netplan try` rolled back my static IP
 
