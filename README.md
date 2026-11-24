@@ -24,7 +24,7 @@ Everything runs on a MacBook Pro (Apple Silicon) in UTM virtual machines on an i
 - [ ] Kali attacker VM
 - [ ] Attack 1: SSH brute force
 - [ ] Attack 2: Backdoor admin account
-- [ ] Attack 3: Tampering with fake student records
+- [x] [Attack 3: Tampering with fake student records](incidents/03-student-records-tampering.md)
 - [ ] Incident reports mapped to MITRE ATT&CK
 
 ## Wazuh dashboard
