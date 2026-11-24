@@ -6,7 +6,7 @@ Home SOC lab: Wazuh SIEM monitoring Linux and Windows endpoints on an isolated v
 
 This is a home security operations lab I built to practice the Tier 1 SOC workflow: get logs flowing, run attacks, catch them, and write them up.
 
-Everything runs on a MacBook Pro (Apple Silicon) in UTM virtual machines on an isolated shared network. A Wazuh 4.14 server (indexer, manager and dashboard on one Ubuntu Server VM) collects logs from two endpoints: an Ubuntu Server machine standing in for a school's Linux server, and a Windows 11 Pro workstation. Each endpoint runs a Wazuh agent and reports back to the server.
+Everything runs on a MacBook Pro (Apple Silicon) in UTM virtual machines on an isolated shared network. A Wazuh 4.14 server (indexer, manager and dashboard on one Ubuntu Server VM) collects logs from two endpoints: an Ubuntu Server machine standing in for a school's Linux server, and a Windows 11 Pro workstation. Each endpoint runs a Wazuh agent and reports back to the server. A separate Ubuntu VM with Hydra and nmap plays the attacker.
 
 ## Lab layout
 
@@ -15,14 +15,15 @@ Everything runs on a MacBook Pro (Apple Silicon) in UTM virtual machines on an i
 | `wazuh` | SIEM server (indexer, manager, dashboard) | 192.168.64.100 |
 | `ubuntu-endpoint` | Monitored Linux server | 192.168.64.101 |
 | `win11-endpoint` | Monitored Windows workstation | 192.168.64.102 |
+| `attacker` | Attacker (Ubuntu with Hydra and nmap, no agent) | 192.168.64.110 |
 
 ## Status
 
 - [x] Wazuh server deployed
 - [x] Ubuntu endpoint reporting
 - [x] Windows 11 endpoint reporting
-- [ ] Kali attacker VM
-- [ ] Attack: SSH brute force
+- [x] Attacker VM (Ubuntu with Hydra and nmap, used instead of Kali on Apple Silicon)
+- [ ] Attack: SSH brute force (run, 0 of 12 passwords worked; [Incident 02 draft](incidents/02-ssh-brute-force-attempt.md))
 - [ ] Attack: Backdoor admin account
 - [x] Attack: Tampering with fake student records ([Incident 01](incidents/01-student-grade-altered.md))
 - [ ] Incident reports mapped to MITRE ATT&CK
@@ -52,7 +53,8 @@ Build notes from November 23, 2026.
 - Guide said `50-cloud-init.yaml`, my VM had `00-installer-config.yaml`
 - **Fix:** check `ls /etc/netplan` and edit whatever's there
 - Opening `nano` on the guide's file name created a new, empty `50-cloud-init.yaml` in `/etc/netplan`. Netplan reads every file there and the higher number wins, so the empty file overrode my config. I also ran `nano` from my home folder once, which made an empty `00-installer-config.yaml` there instead of editing the real one.
-- **Fix:** always use the full path, `/etc/netplan/...`, and check with `ls /etc/netplan` before editing.
+- **Why:** netplan files are readable only by root (`chmod 600`). Without `sudo`, nano can't read the file and opens a blank screen that looks like a new file. Without the full path, nano opens a file of that name in the current folder instead.
+- **Fix:** always use `sudo` and the full path, `sudo nano /etc/netplan/...`, and check with `ls /etc/netplan` before editing. The real file opens with contents in it; a blank screen means something's wrong.
 
 ### Problem 3: `netplan try` rolled back my static IP
 
@@ -106,10 +108,31 @@ sudo systemctl restart wazuh-manager
 
 - **Lesson:** always shut down with `sudo poweroff` before cloning
 
+### Problem 8: Agent wouldn't restart after the FIM config change
+
+- After adding the `<directories>` line for Incident 01, `systemctl restart wazuh-agent` failed
+- I'd added an extra `</directories>` closing tag, which broke the XML in `ossec.conf`
+- **Fix:** removed the stray tag so the line had exactly one closing tag, then restarted
+- **Lesson:** check `/var/ossec/logs/ossec.log` first; it names config errors, often with the line
+
+### Problem 9: Wazuh alert times were 3 minutes ahead
+
+- During the Incident 02 brute force, the first alert showed at 1:36 PM when it was about 1:33 PM
+- The dashboard's `timestamp` comes from the Wazuh server, so the server VM's clock was fast. VM clocks drift, especially after the Mac sleeps.
+- **Fix:** turn on time sync on every Linux VM (and "Set time automatically" on Windows):
+
+```bash
+timedatectl                    # check "System clock synchronized" and "NTP service"
+sudo timedatectl set-ntp true  # turn on automatic time sync
+```
+
+- **Lesson:** an incident timeline is only as good as the clocks behind it
+
 ### Endpoints
 
 - **ubuntu-endpoint:** static `.101`, agent deployed from the dashboard (Linux, DEB, aarch64), showing Active
 - **win11-endpoint:** Windows 11 Pro ARM, static `.102`, agent deployed (Windows MSI), showing Active
+- **attacker:** Ubuntu Server, static `.110`, `hydra` and `nmap` installed with `apt`. No Wazuh agent.
 
 ### Backups
 
